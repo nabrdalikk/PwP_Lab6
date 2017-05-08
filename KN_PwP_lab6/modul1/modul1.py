@@ -41,6 +41,8 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     ScriptedLoadableModuleWidget.setup(self)
 
     # Instantiate and connect widgets ...
+    
+   
 
     #
     # Parameters Area
@@ -51,6 +53,8 @@ class modul1Widget(ScriptedLoadableModuleWidget):
 
     # Layout within the dummy collapsible button
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
+    
+    
 
     #
     # input volume selector
@@ -100,6 +104,56 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     self.enableScreenshotsFlagCheckBox.checked = 0
     self.enableScreenshotsFlagCheckBox.setToolTip("If checked, take screen shots for tutorials. Use Save Data to write them to disk.")
     parametersFormLayout.addRow("Enable Screenshots", self.enableScreenshotsFlagCheckBox)
+    
+    #
+    # Dodane
+    #
+    
+    parametersCollapsibleButton2 = ctk.ctkCollapsibleButton()
+    parametersCollapsibleButton2.text = "Dodane"
+    self.layout.addWidget(parametersCollapsibleButton2)
+    
+    # Layout within the dummy collapsible button
+    parametersFormLayout2 = qt.QFormLayout(parametersCollapsibleButton2)
+    
+    
+    #
+    # wybor modelu
+    #
+    self.inputSelector2 = slicer.qMRMLNodeComboBox()
+    self.inputSelector2.nodeTypes = ["vtkMRMLScalarVolumeNode"]
+    self.inputSelector2.selectNodeUponCreation = True
+    self.inputSelector2.addEnabled = False
+    self.inputSelector2.removeEnabled = False
+    self.inputSelector2.noneEnabled = False
+    self.inputSelector2.showHidden = False
+    self.inputSelector2.showChildNodeTypes = False
+    self.inputSelector2.setMRMLScene( slicer.mrmlScene )
+    self.inputSelector.setToolTip( "Wybor modelu zaladowanego do sceny." )
+    parametersFormLayout2.addRow("Wybor modelu: ", self.inputSelector2)
+    
+    #
+    # suwak
+    #
+    self.imageOpacitySliderWidget = ctk.ctkSliderWidget()
+    self.imageOpacitySliderWidget.singleStep = 1
+    self.imageOpacitySliderWidget.minimum = 0
+    self.imageOpacitySliderWidget.maximum = 100
+    self.imageOpacitySliderWidget.value = 50
+    self.imageOpacitySliderWidget.setToolTip("Wybierz poziom przezroczystosci wybranego modelu w scenie 3D.")
+    parametersFormLayout2.addRow("Przezroczystosc:", self.imageOpacitySliderWidget)
+    
+    #
+    # przycisk
+    #
+
+    self.imageVisibilityButton = qt.QPushButton()
+    self.imageVisibilityButton.text = "ukrycie / wyswietlenie"
+    self.imageVisibilityButton.setToolTip("ukrycie / wyswietlenie wybranego modelu.")
+    parametersFormLayout2.addRow(self.imageVisibilityButton)
+    
+    # Layout within the dummy collapsible button
+    parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
     #
     # Apply Button
