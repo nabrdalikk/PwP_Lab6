@@ -18,7 +18,7 @@ class modul1(ScriptedLoadableModule):
     self.parent.title = "modul1" # TODO make this more human readable by adding spaces
     self.parent.categories = ["Examples"]
     self.parent.dependencies = []
-    self.parent.contributors = ["John Doe (AnyWare Corp.)"] # replace with "Firstname Lastname (Organization)"
+    self.parent.contributors = ["Karolina Nabrdalik (IwM1)"] # replace with "Firstname Lastname (Organization)"
     self.parent.helpText = """
     This is an example of scripted loadable module bundled in an extension.
     It performs a simple thresholding on the input volume and optionally captures a screenshot.
@@ -105,6 +105,17 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     self.enableScreenshotsFlagCheckBox.setToolTip("If checked, take screen shots for tutorials. Use Save Data to write them to disk.")
     parametersFormLayout.addRow("Enable Screenshots", self.enableScreenshotsFlagCheckBox)
     
+    # Layout within the dummy collapsible button
+    parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
+    
+    #
+    # Apply Button
+    #
+    self.applyButton = qt.QPushButton("Apply")
+    self.applyButton.toolTip = "Run the algorithm."
+    self.applyButton.enabled = False
+    parametersFormLayout.addRow(self.applyButton)
+    
     #
     # Dodane
     #
@@ -113,7 +124,7 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     parametersCollapsibleButton2.text = "Dodane"
     self.layout.addWidget(parametersCollapsibleButton2)
     
-    # Layout within the dummy collapsible button
+
     parametersFormLayout2 = qt.QFormLayout(parametersCollapsibleButton2)
     
     
@@ -129,7 +140,7 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     self.inputSelector2.showHidden = False
     self.inputSelector2.showChildNodeTypes = False
     self.inputSelector2.setMRMLScene( slicer.mrmlScene )
-    self.inputSelector.setToolTip( "Wybor modelu zaladowanego do sceny." )
+    self.inputSelector2.setToolTip( "Wybor modelu zaladowanego do sceny." )
     parametersFormLayout2.addRow("Wybor modelu: ", self.inputSelector2)
     
     #
@@ -152,16 +163,7 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     self.imageVisibilityButton.setToolTip("ukrycie / wyswietlenie wybranego modelu.")
     parametersFormLayout2.addRow(self.imageVisibilityButton)
     
-    # Layout within the dummy collapsible button
-    parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
-
-    #
-    # Apply Button
-    #
-    self.applyButton = qt.QPushButton("Apply")
-    self.applyButton.toolTip = "Run the algorithm."
-    self.applyButton.enabled = False
-    parametersFormLayout.addRow(self.applyButton)
+ 
 
     # connections
     self.applyButton.connect('clicked(bool)', self.onApplyButton)
@@ -184,7 +186,11 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     logic = modul1Logic()
     enableScreenshotsFlag = self.enableScreenshotsFlagCheckBox.checked
     imageThreshold = self.imageThresholdSliderWidget.value
-    logic.run(self.inputSelector.currentNode(), self.outputSelector.currentNode(), imageThreshold, enableScreenshotsFlag)
+    imageOpacity = self.imageOpacitySliderWidget.value
+    logic.run(self.inputSelector.currentNode(), self.outputSelector.currentNode(), imageThreshold, enableScreenshotsFlag, imageOpacity)
+
+
+
 
 #
 # modul1Logic
@@ -276,7 +282,7 @@ class modul1Logic(ScriptedLoadableModuleLogic):
     logging.info('Processing started')
 
     # Compute the thresholded output volume using the Threshold Scalar Volume CLI module
-    cliParams = {'InputVolume': inputVolume.GetID(), 'OutputVolume': outputVolume.GetID(), 'ThresholdValue' : imageThreshold, 'ThresholdType' : 'Above'}
+    cliParams = {'InputVolume': inputVolume.GetID(), 'OutputVolume': outputVolume.GetID(), 'ThresholdValue' : imageThreshold, 'ThresholdType' : 'Above', 'Opacity' = imageOpacity}
     cliNode = slicer.cli.run(slicer.modules.thresholdscalarvolume, None, cliParams, wait_for_completion=True)
 
     # Capture screenshot
