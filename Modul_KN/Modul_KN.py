@@ -5,20 +5,20 @@ from slicer.ScriptedLoadableModule import *
 import logging
 
 #
-# modul1
+# Modul_KN
 #
 
-class modul1(ScriptedLoadableModule):
+class Modul_KN(ScriptedLoadableModule):
   """Uses ScriptedLoadableModule base class, available at:
   https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModule.py
   """
 
   def __init__(self, parent):
     ScriptedLoadableModule.__init__(self, parent)
-    self.parent.title = "modul1" # TODO make this more human readable by adding spaces
+    self.parent.title = "Modul_KN" # TODO make this more human readable by adding spaces
     self.parent.categories = ["Examples"]
     self.parent.dependencies = []
-    self.parent.contributors = ["Karolina Nabrdalik (IwM1)"] # replace with "Firstname Lastname (Organization)"
+    self.parent.contributors = ["John Doe (AnyWare Corp.)"] # replace with "Firstname Lastname (Organization)"
     self.parent.helpText = """
     This is an example of scripted loadable module bundled in an extension.
     It performs a simple thresholding on the input volume and optionally captures a screenshot.
@@ -29,10 +29,10 @@ class modul1(ScriptedLoadableModule):
 """ # replace with organization, grant and thanks.
 
 #
-# modul1Widget
+# Modul_KNWidget
 #
 
-class modul1Widget(ScriptedLoadableModuleWidget):
+class Modul_KNWidget(ScriptedLoadableModuleWidget):
   """Uses ScriptedLoadableModuleWidget base class, available at:
   https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModule.py
   """
@@ -41,8 +41,6 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     ScriptedLoadableModuleWidget.setup(self)
 
     # Instantiate and connect widgets ...
-    
-   
 
     #
     # Parameters Area
@@ -53,8 +51,6 @@ class modul1Widget(ScriptedLoadableModuleWidget):
 
     # Layout within the dummy collapsible button
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
-    
-    
 
     #
     # input volume selector
@@ -104,10 +100,7 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     self.enableScreenshotsFlagCheckBox.checked = 0
     self.enableScreenshotsFlagCheckBox.setToolTip("If checked, take screen shots for tutorials. Use Save Data to write them to disk.")
     parametersFormLayout.addRow("Enable Screenshots", self.enableScreenshotsFlagCheckBox)
-    
-    # Layout within the dummy collapsible button
-    parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
-    
+
     #
     # Apply Button
     #
@@ -115,8 +108,8 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     self.applyButton.toolTip = "Run the algorithm."
     self.applyButton.enabled = False
     parametersFormLayout.addRow(self.applyButton)
-    
-    #
+	
+	#
     # Dodane
     #
     
@@ -162,8 +155,6 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     self.imageVisibilityButton.text = "ukrycie / wyswietlenie"
     self.imageVisibilityButton.setToolTip("ukrycie / wyswietlenie wybranego modelu.")
     parametersFormLayout2.addRow(self.imageVisibilityButton)
-    
- 
 
     # connections
     self.applyButton.connect('clicked(bool)', self.onApplyButton)
@@ -183,20 +174,16 @@ class modul1Widget(ScriptedLoadableModuleWidget):
     self.applyButton.enabled = self.inputSelector.currentNode() and self.outputSelector.currentNode()
 
   def onApplyButton(self):
-    logic = modul1Logic()
+    logic = Modul_KNLogic()
     enableScreenshotsFlag = self.enableScreenshotsFlagCheckBox.checked
     imageThreshold = self.imageThresholdSliderWidget.value
-    imageOpacity = self.imageOpacitySliderWidget.value
-    logic.run(self.inputSelector.currentNode(), self.outputSelector.currentNode(), imageThreshold, enableScreenshotsFlag, imageOpacity)
-
-
-
+    logic.run(self.inputSelector.currentNode(), self.outputSelector.currentNode(), imageThreshold, enableScreenshotsFlag)
 
 #
-# modul1Logic
+# Modul_KNLogic
 #
 
-class modul1Logic(ScriptedLoadableModuleLogic):
+class Modul_KNLogic(ScriptedLoadableModuleLogic):
   """This class should implement all the actual
   computation done by your module.  The interface
   should be such that other python code can import
@@ -282,19 +269,19 @@ class modul1Logic(ScriptedLoadableModuleLogic):
     logging.info('Processing started')
 
     # Compute the thresholded output volume using the Threshold Scalar Volume CLI module
-    cliParams = {'InputVolume': inputVolume.GetID(), 'OutputVolume': outputVolume.GetID(), 'ThresholdValue' : imageThreshold, 'ThresholdType' : 'Above', 'Opacity' = imageOpacity}
+    cliParams = {'InputVolume': inputVolume.GetID(), 'OutputVolume': outputVolume.GetID(), 'ThresholdValue' : imageThreshold, 'ThresholdType' : 'Above'}
     cliNode = slicer.cli.run(slicer.modules.thresholdscalarvolume, None, cliParams, wait_for_completion=True)
 
     # Capture screenshot
     if enableScreenshots:
-      self.takeScreenshot('modul1Test-Start','MyScreenshot',-1)
+      self.takeScreenshot('Modul_KNTest-Start','MyScreenshot',-1)
 
     logging.info('Processing completed')
 
     return True
 
 
-class modul1Test(ScriptedLoadableModuleTest):
+class Modul_KNTest(ScriptedLoadableModuleTest):
   """
   This is the test case for your scripted module.
   Uses ScriptedLoadableModuleTest base class, available at:
@@ -310,9 +297,9 @@ class modul1Test(ScriptedLoadableModuleTest):
     """Run as few or as many tests as needed here.
     """
     self.setUp()
-    self.test_modul11()
+    self.test_Modul_KN1()
 
-  def test_modul11(self):
+  def test_Modul_KN1(self):
     """ Ideally you should have several levels of tests.  At the lowest level
     tests should exercise the functionality of the logic with different inputs
     (both valid and invalid).  At higher levels your tests should emulate the
@@ -344,6 +331,6 @@ class modul1Test(ScriptedLoadableModuleTest):
     self.delayDisplay('Finished with download and loading')
 
     volumeNode = slicer.util.getNode(pattern="FA")
-    logic = modul1Logic()
+    logic = Modul_KNLogic()
     self.assertIsNotNone( logic.hasImageData(volumeNode) )
     self.delayDisplay('Test passed!')
